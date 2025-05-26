@@ -31,5 +31,3 @@ RUN tr -d '\r' < /root/start.sh.tmp > /root/start.sh && \
 
 ENTRYPOINT ["/bin/bash"]
 CMD ["/root/start.sh"]
-
-
