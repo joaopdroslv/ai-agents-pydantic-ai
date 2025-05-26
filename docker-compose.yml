@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  ollama:
+    build: .
+    container_name: ollama-qwen
+    ports:
+      - "11434:11434"
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
