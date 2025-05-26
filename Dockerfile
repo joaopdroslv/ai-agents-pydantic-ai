@@ -20,7 +20,7 @@ until curl -s -f http://localhost:11434/api/version >/dev/null 2>&1; do
 done
 
 echo "Ollama is ready. Pulling Qwen model..."
-ollama pull qwen2.5:7b
+ollama pull qwen2.5:14b
 
 tail -f /dev/null
 EOF

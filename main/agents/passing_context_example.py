@@ -1,7 +1,7 @@
 from pydantic_ai import Agent, RunContext
 
 from main.models.ollama_model import ollama_model
-from main.schemas.purchase_recommendation import Recommendation, UserContext
+from main.schemas.purchase_recommendation import PurchaseRecommendation, UserContext
 
 most_purchased = [
     "Onyx Storm",
@@ -13,7 +13,7 @@ most_purchased = [
 
 agent_with_context = Agent(
     model=ollama_model,
-    output_type=Recommendation,
+    output_type=PurchaseRecommendation,
     deps_type=UserContext,
     system_prompt=(
         "U are a helper system for buyers, "

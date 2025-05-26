@@ -8,6 +8,6 @@ class UserContext(BaseModel):
     last_purchased: Optional[List[str]] = None
 
 
-class Recommendation(BaseModel):
+class PurchaseRecommendation(BaseModel):
     recommendation: str
     topic: str
