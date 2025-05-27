@@ -1,15 +1,16 @@
-from main.models.local_qwen import local_qwen
-from pydantic_ai import Agent, RunContext, ModelRetry
-from pydantic_ai.usage import Usage, UsageLimits
-from pydantic_ai.messages import ModelMessage
-from dataclasses import dataclass
-from pydantic import BaseModel, Field
 import datetime
 import logging
 import os
+from dataclasses import dataclass
 from typing import Literal
+
+from pydantic import BaseModel, Field
+from pydantic_ai import Agent, ModelRetry, RunContext
+from pydantic_ai.messages import ModelMessage
+from pydantic_ai.usage import Usage, UsageLimits
 from rich.prompt import Prompt
 
+from main.models.local_qwen import local_qwen
 
 # ===== Logging Configuration ===== #
 
@@ -19,7 +20,7 @@ os.makedirs(LOG_DIR, exist_ok=True)
 logging.basicConfig(
     filename=os.path.join(LOG_DIR, "info.log"),
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    format="%(asctime)s [%(levelname)s] %(message)s",
 )
 
 logger = logging.getLogger(__name__)
@@ -87,17 +88,17 @@ async def validate_output(
 
     if output.origin != ctx.deps.req_origin:
         errors.append(
-            f'Flight should have origin {ctx.deps.req_origin}, not {output.origin}'
+            f"Flight should have origin {ctx.deps.req_origin}, not {output.origin}"
         )
     if output.destination != ctx.deps.req_destination:
         errors.append(
-            f'Flight should have destination {ctx.deps.req_destination}, not {output.destination}'
+            f"Flight should have destination {ctx.deps.req_destination}, not {output.destination}"
         )
     if output.date != ctx.deps.req_date:
-        errors.append(f'Flight should be on {ctx.deps.req_date}, not {output.date}')
+        errors.append(f"Flight should be on {ctx.deps.req_date}, not {output.date}")
 
     if errors:
-        raise ModelRetry('\n'.join(errors))
+        raise ModelRetry("\n".join(errors))
     else:
         return output
 
@@ -203,7 +204,9 @@ async def main():
         )
 
         if isinstance(result.output, NoFlightFound):
-            logger.info(f"No flight found from {deps.req_origin} to {deps.req_destination} on {deps.req_date}.")
+            logger.info(
+                f"No flight found from {deps.req_origin} to {deps.req_destination} on {deps.req_date}."
+            )
             print("No flight found.")
             break
 
@@ -255,10 +258,7 @@ async def find_seat(usage: Usage) -> SeatPreference:
         if isinstance(result.output, SeatPreference):
             return result.output
         else:
-            logger.info(
-                "Could no understand seat preference:\n\n"
-                f"{answer}"
-            )
+            logger.info("Could no understand seat preference:\n\n" f"{answer}")
             print("Could not understand seat preference. Please try again.")
             message_history = result.all_messages()
 
