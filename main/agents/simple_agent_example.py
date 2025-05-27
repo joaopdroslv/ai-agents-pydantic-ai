@@ -1,10 +1,10 @@
 from pydantic_ai import Agent
 
-from main.models.ollama_model import ollama_model
+from main.models.local_qwen import local_qwen
 from main.schemas.location import Location
 
 # Minimal configuration, just one response template for the output
-agent = Agent(ollama_model, output_type=Location)
+agent = Agent(local_qwen, output_type=Location)
 
 # result = agent.run_sync('Where were the olympics held in 2012?')
 result = agent.run_sync("Where was Isac Newton born?")

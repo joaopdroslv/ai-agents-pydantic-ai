@@ -1,11 +1,11 @@
 from pydantic_ai import Agent, Tool
 
-from main.models.ollama_model import ollama_model
+from main.models.local_qwen import local_qwen
 from main.schemas.product_price import ProductPrice
 from main.tools.get_product_price import get_product_price
 
 agent_tools = Agent(
-    model=ollama_model,
+    model=local_qwen,
     output_type=ProductPrice,
     system_prompt=(
         "You are a price search assistant. "

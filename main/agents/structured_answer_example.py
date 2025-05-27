@@ -1,10 +1,10 @@
 from pydantic_ai import Agent
 
-from main.models.ollama_model import ollama_model
+from main.models.local_qwen import local_qwen
 from main.schemas.question_classification import QuestionClassification
 
 scructured_agent = Agent(
-    model=ollama_model,
+    model=local_qwen,
     system_prompt=(
         "U are an agent whose objective is only to classify questions."
         "To each question, answer in JSON format."

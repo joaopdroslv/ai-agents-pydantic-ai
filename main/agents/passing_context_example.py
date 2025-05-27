@@ -1,6 +1,6 @@
 from pydantic_ai import Agent, RunContext
 
-from main.models.ollama_model import ollama_model
+from main.models.local_qwen import local_qwen
 from main.schemas.purchase_recommendation import PurchaseRecommendation, UserContext
 
 most_purchased = [
@@ -12,17 +12,7 @@ most_purchased = [
 ]
 
 agent_with_context = Agent(
-    model=ollama_model,
-    output_type=PurchaseRecommendation,
-    deps_type=UserContext,
-    system_prompt=(
-        "U are a helper system for buyers, "
-        "wich should recommend similar books, "
-        "based on the topic, to those previously purchased by the user. "
-        "If the user does not have previous purchases, "
-        "recommend a book that are among the most purchased. "
-        "Recommend only real and published books."
-    ),
+    model=local_qwen, output_type=PurchaseRecommendation, deps_type=UserContext
 )
 
 
@@ -33,17 +23,21 @@ async def inject_last_purchases(context: RunContext[UserContext]) -> str:
     user_context = context.deps
 
     last_purchased = (
-        f"User last purchases were: {', '.join(user_context.last_purchased)}."
+        f"{', '.join(user_context.last_purchased)}."
         if user_context.last_purchased
         else "No previous purchases found. "
         f"These are the most purchased books for the moment: {', '.join(most_purchased)}"
     )
 
     return (
-        f"User name: {user_context.name}. "
-        f"{last_purchased} "
-        "Always answer in JSON format, "
-        " like {'recommendation': 'X' 'topic': 'Y'}. "
+        "U are a helper system for buyers, wich should recommend similar books, "
+        "based on the topic, to those previously purchased by the user. "
+        "If the user does not have previous purchases, "
+        "recommend a book that are among the most purchased. "
+        "Recommend only real and published books.\n\n"
+        f"- User name: {user_context.name}. "
+        f"- Previous purchased: {last_purchased} "
+        "\n\nAlways answer in JSON format, like {'recommendation': 'X' 'topic': 'Y'}.\n\n"
         "Recommendation is the name of the recommended book, and "
         "topic represents the type of book u detected the user has purchased "
         "recently, such as Sci-fi or Policital Science."
