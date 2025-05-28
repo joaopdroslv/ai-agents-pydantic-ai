@@ -2,7 +2,7 @@ import datetime
 import logging
 import os
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, List, Union, Optional
 
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent, ModelRetry, RunContext
@@ -51,7 +51,7 @@ class Deps:
 # This agent is responsible for controlling the flow of the conversation
 search_agent = Agent(
     model=local_qwen,
-    output_type=FlightDetails | NoFlightFound,
+    output_type=Union[FlightDetails | NoFlightFound],
     retries=4,
     system_prompt="Ur job is to find the cheapest flight for the user on the diven date.",
 )
@@ -60,13 +60,13 @@ search_agent = Agent(
 # This agente is responsible for extracting flight details from web page text.
 extraction_agent = Agent(
     model=local_qwen,
-    output_type=list[FlightDetails],
+    output_type=List[FlightDetails],
     system_prompt="Extract all the flight details from the given text.",
 )
 
 
 @search_agent.tool
-async def extract_flights(ctx: RunContext[Deps]) -> list[FlightDetails]:
+async def extract_flights(ctx: RunContext[Deps]) -> List[FlightDetails]:
     """Get details of all flights."""
 
     # Pass the usage to the search agent so requests within this agent are counted
@@ -77,14 +77,14 @@ async def extract_flights(ctx: RunContext[Deps]) -> list[FlightDetails]:
 
 @search_agent.output_validator
 async def validate_output(
-    ctx: RunContext[Deps], output: FlightDetails | NoFlightFound
-) -> FlightDetails | NoFlightFound:
+    ctx: RunContext[Deps], output: Union[FlightDetails | NoFlightFound]
+) -> Union[FlightDetails | NoFlightFound]:
     """Procedural validation that the flight meets the constraints."""
 
     if isinstance(output, NoFlightFound):
         return output
 
-    errors: list[str] = []
+    errors: List[str] = []
 
     if output.origin != ctx.deps.req_origin:
         errors.append(
@@ -115,7 +115,7 @@ class Failed(BaseModel):
 # This agent is responsible for extracting the user's seat selection
 seat_preference_agent = Agent(
     model=local_qwen,
-    output_type=SeatPreference | Failed,
+    output_type=Union[SeatPreference | Failed],
     system_prompt=(
         "Extract the user's seat preference. "
         "Seats A and F are window seats. "
@@ -190,7 +190,7 @@ async def main():
         req_date=datetime.date(2025, 1, 10),
     )
 
-    message_history: list[ModelMessage] | None = None
+    message_history: Optional[List[ModelMessage]] = None
     usage: Usage = Usage()
 
     # Run the agent until a satisfactory flight is found
@@ -241,9 +241,11 @@ async def main():
                     output_tool_return_content="Please suggest another flight."
                 )
 
+    logger.info(message_history)
+
 
 async def find_seat(usage: Usage) -> SeatPreference:
-    message_history: list[ModelMessage] | None = None
+    message_history: Optional[List[ModelMessage]] = None
 
     while True:
         answer = Prompt.ask("What seat would u like?")
@@ -254,6 +256,9 @@ async def find_seat(usage: Usage) -> SeatPreference:
             usage=usage,
             usage_limits=usage_limits,
         )
+
+        print(result)
+        logger.info(result)
 
         if isinstance(result.output, SeatPreference):
             return result.output
