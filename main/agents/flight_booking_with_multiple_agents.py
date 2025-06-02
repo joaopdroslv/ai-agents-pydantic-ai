@@ -8,11 +8,10 @@ from pydantic_ai.messages import ModelMessage
 from pydantic_ai.usage import Usage, UsageLimits
 from rich.prompt import Prompt
 
-from main.config.logger import logger
+from main.examples.flight_web_page import flights_web_page
 from main.models.flight_booking import Deps
 from main.models.local_qwen import local_qwen
 from main.schemas.flight_booking import *
-from main.utils.flight_web_page import flights_web_page
 
 LOG_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../logs"))
 os.makedirs(LOG_DIR, exist_ok=True)
