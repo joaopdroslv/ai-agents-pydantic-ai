@@ -2,13 +2,12 @@ from pydantic_ai import Agent
 
 from main.models.local_qwen import local_qwen
 
-# Minimal configuration, just one response template for the output
 agent = Agent(local_qwen)
 
 message_history = None
 
 
-def adjust_log(actor: str) -> str:
+def create_log(actor: str) -> str:
     from datetime import datetime
 
     now = datetime.now()
@@ -16,16 +15,16 @@ def adjust_log(actor: str) -> str:
 
 
 while True:
-    user_input = input(f"\n{adjust_log("You")}: ")
+    user_input = input(f"\n{create_log("You")}: ")
 
     # Allow to end the conversation
     if user_input.lower() in ["exit", "quit"]:
-        print(f"\n{adjust_log("System")}: Ending conversation with AI Agent.")
+        print(f"\n{create_log("System")}: Ending conversation with AI Agent.")
         break
 
     # If have a message history, send it
     result = agent.run_sync(user_input, message_history=message_history)
 
-    print(f"\n{adjust_log("AI Agent")}: ", result.output)
+    print(f"\n{create_log("AI Agent")}: ", result.output)
 
     message_history = result.all_messages()
