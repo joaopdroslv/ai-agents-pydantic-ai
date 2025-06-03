@@ -9,7 +9,6 @@ from pydantic_ai.usage import Usage, UsageLimits
 from rich.prompt import Prompt
 
 from main.examples.flight_web_page import flights_web_page
-from main.models.flight_booking import Deps
 from main.models.local_qwen import local_qwen
 from main.schemas.flight_booking import *
 
