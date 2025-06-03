@@ -35,7 +35,7 @@ recipe_dataset = Dataset[CustomerOrder, Recipe, Any](
             inputs=CustomerOrder(
                 dish_name="Spaghetti Bolognese", dietary_restriction="vegetarian"
             ),
-            expected_output=Recipe,
+            expected_output=None,
             metadata={"focus": "vegetarian"},
             evaluators=(
                 LLMJudge(
@@ -49,7 +49,7 @@ recipe_dataset = Dataset[CustomerOrder, Recipe, Any](
             inputs=CustomerOrder(
                 dish_name="Chocolate Cake", dietary_restriction="gluten-free"
             ),
-            expected_output=Recipe,
+            expected_output=None,
             metadata={"focus": "gluten-free"},
             evaluators=(
                 LLMJudge(
