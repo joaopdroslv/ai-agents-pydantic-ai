@@ -1,0 +1,13 @@
+POST http://localhost:11434/v1/chat/completions
+Content-Type: application/json
+Authorization: Bearer local
+
+{
+  "model": "qwen2.5:14b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain the theory of relativity in simple terms."
+    }
+  ]
+}

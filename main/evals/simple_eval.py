@@ -11,6 +11,7 @@ agent = Agent(
         "What is the capital of Brazil?\n\n"
         "Just answer: 'Federal District'"
     ),
+    retries=3,
 )
 
 
