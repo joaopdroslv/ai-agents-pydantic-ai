@@ -1,7 +1,7 @@
 from typing import Any
 
 from pydantic_ai import Agent, format_as_xml
-from pydantic_evals import Case, Dataset, reporting
+from pydantic_evals import Case, Dataset
 from pydantic_evals.evaluators import IsInstance, LLMJudge
 
 from main.models.local_qwen import local_qwen
