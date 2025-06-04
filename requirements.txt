@@ -1,3 +1,5 @@
 pydantic>=2.10.6
 pydantic-ai>=0.0.36
 pydantic-ai-slim[duckduckgo]
+logfire
+python-dotenv
