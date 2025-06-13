@@ -30,5 +30,5 @@ main/
 Build and run everything
 
 ```bash
-docker compose up --build  -d
+docker compose up --build -d
 ```
