@@ -17,6 +17,7 @@ main/
 
 ## 🚀 Features Explored
 
+- 🧪 **Model abstraction using OpenAI-compatible providers (e.g., Qwen via Ollama)**
 - 🧰 **Input/output validation using Pydantic**
 - 🔗 **Agent chaining and context passing**
 - 💬 **Conversation history handling**
